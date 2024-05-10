@@ -1,19 +1,52 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '2.7.1'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
-group = 'org.example'
-version = '1.0-SNAPSHOT'
+group 'org.example'
+version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
-
+/**
+ * Этот блок определяет зависимости проекта.
+ *
+ * Каждая зависимость указывается с помощью группы и имени артефакта.
+ * Здесь не указана версия, но она будет определена репозиториями, определенными в проекте.
+ */
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    // Стартер Spring Boot для веб-приложений
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Стартер Spring Boot для JPA (Java Persistence API)
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+    // Драйвер базы данных PostgreSQL, необходим только во время выполнения
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Обработчик аннотаций Lombok, нужен только для компиляции
+    compileOnly 'org.projectlombok:lombok'
+    // Обработчик аннотаций Lombok, необходимый для компиляции и во время выполнения
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
 }
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'org.example.Main'
+        )
+    }
+}
+
+shadowJar {
+    archiveFileName = 'Movie-World-Backend.jar'
 }
